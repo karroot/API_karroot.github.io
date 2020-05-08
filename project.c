@@ -211,9 +211,12 @@ void hashtable_rehash_all(hashtable* t )
     free(data);
 }
 
+/**
+ * get the index of an hashtable 
+ */
 unsigned get_index(const hashtable* t, const void* v)
 {
-    return hashtable_hash(v) % t->capacity;
+    return hashtable_hash(v) % t->capacity; //first do an hash of the value "v" and mod it with the hashtable capacity
 }
 
 void hashtable_set( hashtable* t,  char* key,  void* value)
@@ -245,15 +248,17 @@ void hashtable_set( hashtable* t,  char* key,  void* value)
 void* hashtable_get(hashtable* t, const char* const key)
 {
     const unsigned index = get_index(t, key);
-    LIST list_of_key = t->data[index];
+    LIST list_of_key = t->data[index]; //get the entire list of key by searching from "t->data" starting from "index"
     LIST node = list_search(list_of_key, key);
     if(node)
         return node->value;
     return NULL;
 }
-
+/**
+ * check if a key is present in a entire hashtable 
+ */
 bool hashtable_is_key_present(hashtable* t, char* k) {
-    return hashtable_get(t, k) != NULL;
+    return hashtable_get(t, k) != NULL; //try to get from the hashtable "t" a key "k", if not null return "true"
 }
 
 int hashtable_remove(hashtable* t, const char* key)
@@ -886,11 +891,13 @@ void graph_destroy(Graph* g)
     hashtable_destroy(g->nodes);
     DEBUG_OUT;
 }
-
+/**
+ * function that check if a node with a key "key" exist in the graph 
+ */
 bool graph_node_exists(const Graph* g, const NodeKey  key)
 {
     DEBUG_IN;
-    const bool ans =  hashtable_is_key_present(g->nodes, key);
+    const bool ans =  hashtable_is_key_present(g->nodes, key); //check if node with a certain key exist in the hashtable "g->nodes"
     DEBUG_OUT;
     return ans;
 }
@@ -983,7 +990,11 @@ Relation graph_add_relation(Graph* g, Relation rel)
 }
 
 //-------------------------------
-
+/**
+ *   addent command handler
+ *   first save the ident name in the variable ident
+ *  then if does not exist a node with by key "ident" in the graph "g" we create a node "ident" 
+*/
 void handle_addent(Graph* g, char* cmd)
 {
     DEBUG_IN;
@@ -993,7 +1004,7 @@ void handle_addent(Graph* g, char* cmd)
 
     if(!graph_node_exists(g, ident))
     {
-        ident = strdup(ident);
+        ident = strdup(ident); //necessary to copy string 
         hashtable_set(g->nodes, ident, graphnode_create(ident) );
     }
 
@@ -1256,7 +1267,7 @@ void handle_report(Graph* g)
 //-------------------------------
 
 /**
- * funzione per gestire input
+ * function to handle all kind of command input
  * @param cmd stringa di input
  */
 int handle_command(Graph* g,  char* cmd) {
