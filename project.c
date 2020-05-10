@@ -66,7 +66,9 @@ void list_print(const LIST head) {
     printf("\n");
 }
 
-
+/**
+ * search for a key in a list 
+*/
 LIST list_search(LIST head, const char* k) {
     LIST x = head;
     while (x != NULL) {
@@ -136,7 +138,7 @@ int list_delete(LIST* head_ref, const char* k) {
 }
 
 
-//---------------
+//---HASHTABLE--------
 
 #define HASHTABLE_THREAHOLD (0.8)
 #define HASHTABLE_FACTOR (2)
@@ -150,7 +152,7 @@ unsigned  hashtable_hash( const void*  str_v) {
     const char* str = (char*)str_v;
     unsigned long hash = 5381;
     int c;
-    while ((c = *str++)) hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    while ((c = *str++)) hash = ((hash << 5) + hash) + c; /* hash  * 33 + c */
     return hash;
 }
 
@@ -216,7 +218,8 @@ void hashtable_rehash_all(hashtable* t )
  */
 unsigned get_index(const hashtable* t, const void* v)
 {
-    return hashtable_hash(v) % t->capacity; //first do an hash of the value "v" and mod it with the hashtable capacity
+int x= hashtable_hash(v);
+    return x% t->capacity; //first do an hash of the value "v" and mod it with the hashtable capacity
 }
 
 void hashtable_set( hashtable* t,  char* key,  void* value)
@@ -276,7 +279,7 @@ void hashtable_destroy(hashtable* t) {
 
 
 
-//-------------------
+//-----TREE---------
 struct binary_tree ;
 struct binary_tree_node;
 typedef int  (*binary_tree_node_cmp_f) ( void *a, void *b);
@@ -513,6 +516,7 @@ void tree_visit_best(binary_tree* tree, binary_tree_value_f fn)
 
 }
 
+typedef struct binary_tree* NodeSetByRel;
 
 /*
 void tree_visit_best(binary_tree* tree, binary_tree_value_f fn)
@@ -578,9 +582,9 @@ inline static const char* CurrentDate() {
 }
 
 
-typedef struct binary_tree* NodeSetByRel;
 
-//----------------------------
+
+//------VECTOR_STRING---------------
 
 typedef struct vector_string
 {
@@ -744,7 +748,7 @@ char* vector_string_at(const vector_string* vec, const int i)
     return vec->data[i];
 }
 
-//---------------------------------------------
+//---------GRAPH_NODE---------------------------
 
 typedef struct GraphNode
 {
@@ -837,7 +841,7 @@ int graphnode_decrement_in_per_rel(const GraphNode* gn, const Relation rel)
 
 
 
-//---------------------------
+//---NODE_COUNTER-------------------
 
 int nodecounter_compare( void* av, void* bv)
 {
@@ -864,7 +868,8 @@ NodeCounter* nodecounter_create(const int cnt,  NodeKey k)
     ret->key = k;
     return ret;
 }
-//----------------------------
+
+//----------GRAPH-------------
 typedef struct Graph {
     hashtable* nodes; //Nodekey -> GraphNode
     hashtable* forest; //Relation -> NodeSetByRel
@@ -989,11 +994,11 @@ Relation graph_add_relation(Graph* g, Relation rel)
     return rel1;
 }
 
-//-------------------------------
+//--------HANDLERS------------
 /**
  *   addent command handler
  *   first save the ident name in the variable ident
- *  then if does not exist a node with by key "ident" in the graph "g" we create a node "ident" 
+ *  then if does not exist a node with key "ident" in the graph "g" we create a node "ident" 
 */
 void handle_addent(Graph* g, char* cmd)
 {
@@ -1012,7 +1017,7 @@ void handle_addent(Graph* g, char* cmd)
 }
 
 
-//-------------------------------
+
 
 void handle_delent(Graph* g, char* cmd)
 {
