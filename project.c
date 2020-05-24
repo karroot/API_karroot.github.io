@@ -250,7 +250,7 @@ void hashtable_set( hashtable* t,  char* key,  void* value)
  */
 void* hashtable_get(hashtable* t, const char* const key)
 {
-    const unsigned index = get_index(t, key);
+    const unsigned index = get_index(t, key); //get the starting index of the value in the hashtable
     LIST list_of_key = t->data[index]; //get the entire list of key by searching from "t->data" starting from "index"
     LIST node = list_search(list_of_key, key);
     if(node)
